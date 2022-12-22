@@ -19,16 +19,20 @@ allClearButton.addEventListener('click', () => {
     updateDisplay()
 })
 
-backspaceButton.addEventListener('click', () => {
+function backspaceCurrent (){
     if(currentText.textContent){
-    current = currentText.textContent.slice(0,-1)
-    updateDisplay()
-    } return
+        current = currentText.textContent.slice(0,-1)
+        updateDisplay()
+        } return
+}
+
+backspaceButton.addEventListener('click', () => {
+    backspaceCurrent()
 })
 
 // listeners for the number pad with '.'
 
-numbers.map(number =>{
+numbers.forEach(number =>{
     number.addEventListener('click', (n) => {
         switch(n.target.textContent){
             default:
@@ -52,7 +56,6 @@ numbers.map(number =>{
 function updateDisplay (){
     currentText.textContent = current
     previousText.textContent = `${previous}` + `${currentOperation}`
-    tertiary = ''
 }
 
 //operation function that sets decimal places to 5
@@ -63,19 +66,47 @@ function operation(o, a, b){
         case '+' :
             answer = parseFloat(a) + parseFloat(b)
             return parseFloat(answer.toFixed(5))
-            break
+            
         case '*':
             answer = parseFloat(a) * parseFloat(b)
             return parseFloat(answer.toFixed(5))
-            break
+            
         case '/':
             answer = parseFloat(a) / parseFloat(b)
             return parseFloat(answer.toFixed(5))
-            break
+        
         case '-':
             answer = parseFloat(a) - parseFloat(b)
             return parseFloat(answer.toFixed(5))
-            break
+        
+    }
+}
+
+//operation inner function
+function innerOperation (maybeOperator){
+if(current == ''){
+    currentOperation = maybeOperator
+    updateDisplay()
+} else if(previous == ''){
+    currentOperation = maybeOperator
+    updateCurrentValue()
+    updateDisplay()
+}
+ else {  
+    current = operation(currentOperation, previous, current)
+    updateDisplay()
+    updateCurrentValue()          
+    currentOperation = maybeOperator
+    
+}
+}
+
+//equal function 
+function equalFunction() {
+    if(previous && currentOperation && current != ''){           
+        current = operation(currentOperation, previous, current)
+        updateDisplay()
+        updateCurrentValue()
     }
 }
 
@@ -86,52 +117,27 @@ document.addEventListener("keydown", (event) => {
     let operatorList = ["*","+","-","/",]
     let number = parseInt(event.key)
     let maybeOperator = event.key.toString()
-    
+
     if (number >= 0 && number <= 9){
             current = current.toString() + number.toString()
             updateDisplay();
     } else if (event.key == "Backspace") {
-        if(currentText.textContent){
-            current = currentText.textContent.slice(0,-1)
-            updateDisplay()
-            } return
+        backspaceCurrent()
     } else if (operatorList.indexOf(maybeOperator) != -1){
-        if(current == ''){
-            currentOperation = maybeOperator
-            updateDisplay()
-        } else { 
-        
-        if(previous == ''){
-            currentOperation = maybeOperator
-            previous = current
-            current = ''
-            updateDisplay()
-            
-        } else {
-        
-            current = operation(currentOperation, previous, current)
-            updateDisplay()
-            previous = current
-            current = ''            
-            currentOperation = maybeOperator
-    } 
-}
+        innerOperation(maybeOperator)        
     } else if (maybeOperator == '=' || maybeOperator == 'Enter'){        
-        if(previous && currentOperation){
-            if(current != ''){
-            current = operation(currentOperation, previous, current)
-            updateDisplay()
-            previous = current
-            current = ''
-            } return
-    } return
-}
-    })
+        equalFunction()}})
 
+//updates previous and current values
+
+function updateCurrentValue(){
+    previous = current
+    current = ''
+}
 
 //operator keys and running total functionality
 
-operators.map(operator => {
+operators.forEach(operator => {
     operator.addEventListener('click', (o) => {
        if(current == ''){
             currentOperation = operator.textContent
@@ -140,16 +146,14 @@ operators.map(operator => {
         
         if(previous == ''){
             currentOperation = operator.textContent
-            previous = current
-            current = ''
+            updateCurrentValue()
             updateDisplay()
             
         } else {
         
             current = operation(currentOperation, previous, current)
             updateDisplay()
-            previous = current
-            current = ''            
+            updateCurrentValue()          
             currentOperation = operator.textContent           
     }
 }
@@ -160,14 +164,6 @@ operators.map(operator => {
 //equals listener with operation functionality 
 
     equals.addEventListener('click', () => {
-        if(current != ''){
-        if(previous && currentOperation){
-        current = operation(currentOperation, previous, current)
-        updateDisplay()
-        previous = current
-        current = ''
-
-        } return
-        } return
+        equalFunction()
     })
     
