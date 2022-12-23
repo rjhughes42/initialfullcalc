@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@700&display=swap');
+
 * {
   box-sizing: border-box;  
 }
@@ -5,6 +7,7 @@
 body {
   max-height: 100vh;
   background-color: lightblue;
+  font-family: Mukta, sans-serif
 }
 
 #calculator-grid {
@@ -41,18 +44,72 @@ body {
   color: white;
   display: flex;
   align-items: flex-end;
-  justify-content: space-around;
+  justify-content:flex-end;
   flex-direction: column;
-  padding: 5%;
-  height: 2rem;
+  height:  8rem;
   width: 12rem;
   font-size: 1.5rem;
   word-wrap: break-word;
   word-break: break-all;
-
+  overflow: hidden;
+  padding: 2%;
 }
 
 a img {
   width: 180px;
   height: 50px;
+}
+
+
+
+/* media query for smaller screens */
+@media (max-width: 600px) {
+  #calculator-grid {
+    flex-direction: column;
+    height: auto;
+    width:100%;
+  }
+
+  #display {
+    width: 12rem;
+    font-size: 1rem;
+    height: 6rem;
+    padding: 6%;
+
+  }
+
+  .allButtons {
+    grid-template-columns: repeat(4, 3rem);
+  }
+}
+
+a img {
+  height: 1em;
+  width:3em
+}
+
+@media (max-width: 300px) {
+  #calculator-grid {
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+
+  #display {
+    width: 12rem;
+    font-size: 1rem;
+    height: 50%;
+    padding: 6%;
+  }
+
+  .allButtons {
+    grid-template-columns: repeat(3, 4rem);
+  }
+  .span-two {
+    grid-column: span 3;
+  }
+
+  #equals {
+    grid-column: span 3;
+  }
 }

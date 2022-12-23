@@ -103,11 +103,12 @@ if(current == ''){
 
 //equal function 
 function equalFunction() {
+    
     if(previous && currentOperation && current != ''){           
         current = operation(currentOperation, previous, current)
         updateDisplay()
-        updateCurrentValue()
     }
+    
 }
 
 
@@ -126,12 +127,17 @@ document.addEventListener("keydown", (event) => {
     } else if (operatorList.indexOf(maybeOperator) != -1){
         innerOperation(maybeOperator)        
     } else if (maybeOperator == '=' || maybeOperator == 'Enter'){        
-        equalFunction()}})
+        updateDisplay()
+        equalFunction()
+       
+    }})
 
 //updates previous and current values
 
 function updateCurrentValue(){
-    previous = current
+    if (previous == '') {
+        previous = current
+    }
     current = ''
 }
 
@@ -165,5 +171,7 @@ operators.forEach(operator => {
 
     equals.addEventListener('click', () => {
         equalFunction()
+        updateCurrentValue()
+
     })
     
