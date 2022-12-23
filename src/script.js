@@ -127,9 +127,8 @@ document.addEventListener("keydown", (event) => {
     } else if (operatorList.indexOf(maybeOperator) != -1){
         innerOperation(maybeOperator)        
     } else if (maybeOperator == '=' || maybeOperator == 'Enter'){        
-        updateDisplay()
         equalFunction()
-       
+        updateCurrentValue()
     }})
 
 //updates previous and current values
